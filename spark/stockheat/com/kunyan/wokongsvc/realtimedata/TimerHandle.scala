@@ -137,9 +137,9 @@
       val gnInfo = stockGn.value.getOrElse(x._1, new ListBuffer[String])
 
       /* hyInfo保存的是单只股票对应的所有行业 */
-     val hyInfo = stockHy.value.getOrElse(x._1, new ListBuffer[String])
+      val hyInfo = stockHy.value.getOrElse(x._1, new ListBuffer[String])
 
-     hyInfo.map( y => (y, x._2)) ++ gnInfo.map( z => (z, x._2))
+      hyInfo.map( y => (y, x._2)) ++ gnInfo.map( z => (z, x._2))
      }).reduceByKey(_ + _).collectAsMap
 
      nowHyGnData.foreach( x => {
