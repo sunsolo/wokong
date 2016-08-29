@@ -61,6 +61,15 @@
      day
    }
 
+   def getMonthAndDay: (Int, Int) = {
+     val cal = Calendar.getInstance
+
+     (
+       cal.get(Calendar.MONTH) + 1,
+       cal.get(Calendar.DAY_OF_MONTH)
+     )
+   }
+
    def getZeHour(cal: Calendar): String = {
 
      val hour = cal.get(Calendar.HOUR_OF_DAY)

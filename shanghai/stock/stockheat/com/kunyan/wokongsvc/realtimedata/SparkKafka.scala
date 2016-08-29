@@ -116,7 +116,8 @@ object SparkKafka extends CustomLogger {
 
       val cal: Calendar = Calendar.getInstance
       val nowUpdateTime = TimeHandle.getDay
-      if(nowUpdateTime != lastUpdateTime && TimeHandle.getNowHour(cal) == 0) {
+      val hour = TimeHandle.getNowHour(cal)
+      if(nowUpdateTime != lastUpdateTime && hour == 0) {
         RddOpt.updateAccum(masterPool.getConnect, "stock_visit", 0)
         lastUpdateTime = nowUpdateTime
       }
@@ -258,8 +259,7 @@ object SparkKafka extends CustomLogger {
       isAlarm.setValue(0)
 
       val stockInfo = heatInfo.value
-      val json = MixData(stamp, month, day, stockInfo).toJson.compactPrint
-      println(json)
+      val json = MixData(stamp, month, day, hour, stockInfo).toJson.compactPrint
 
       kafkaProducer.send("0", json)
 
@@ -268,13 +268,13 @@ object SparkKafka extends CustomLogger {
       val ret = KafkaProducer.constructKeyMessage(
         Seq(
           KafkaProducer.packMessageParam(
-            topic, "0", month, day, stockInfo, 1, 3
+            topic, "0", stamp, month, day, hour, stockInfo, 1, 3
           ),
           KafkaProducer.packMessageParam(
-            topic, "1", month, day, stockInfo, 2, 3
+            topic, "1", stamp, month, day, hour, stockInfo, 2, 3
           ),
           KafkaProducer.packMessageParam(
-            topic, "2", month, day, stockInfo, 3, 3
+            topic, "2", stamp, month, day, hour, stockInfo, 3, 3
           )
         ):_*
       )
